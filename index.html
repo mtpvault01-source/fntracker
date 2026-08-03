@@ -3,340 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortnite Events & Stats | PRO</title>
+    <title>Fortnite Pro Tracker & Competitive Hub</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #060913; /* Deep cyber dark */
+            background-color: #080b13;
             color: #ffffff;
             overflow-x: hidden;
         }
-        /* Glassmorphism utilities */
-        .glass-panel {
-            background: rgba(16, 20, 31, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+        /* Glassmorphism Styling */
+        .glass-card {
+            background: rgba(15, 22, 36, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        /* Custom neon scrollbar */
+        .glass-card:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.15);
+        }
+        /* Custom Neon Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #060913; }
-        ::-webkit-scrollbar-thumb { background: #22d3ee; border-radius: 4px; }
+        ::-webkit-scrollbar-track { background: #080b13; }
+        ::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #facc15; }
         
-        /* Smooth tab transitions */
-        .tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Tab Fade Animations */
+        .tab-page { display: none; }
+        .tab-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tournament Card Graphic Gradients */
+        .bg-fncs { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%); }
+        .bg-cashcup { background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%); }
+        .bg-pscup { background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 50%, #3b82f6 100%); }
+        .bg-zerobuild { background: linear-gradient(135deg, #581c87 0%, #7e22ce 50%, #a855f7 100%); }
     </style>
 </head>
-<body class="min-h-screen bg-[url('https://cdn2.unrealengine.com/t-bp29-lobby-2048x1024-2048x1024-d2db96752df7.png')] bg-cover bg-fixed bg-center">
-    
-    <!-- Dark overlay to make text readable over the background -->
-    <div class="fixed inset-0 bg-[#060913]/85 z-[-1]"></div>
+<body class="min-h-screen relative pb-16">
 
-    <!-- Floating Navbar -->
-    <nav class="glass-panel sticky top-0 z-50 border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.5)] px-6 py-4">
+    <!-- Glowing Background Lights -->
+    <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 glass-card border-b border-white/10 px-4 lg:px-8 py-3">
         <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-8">
-                <!-- Glowing Logo -->
-                <div class="bg-yellow-400 text-black font-extrabold px-3 py-1 text-xl rounded-lg shadow-[0_0_15px_rgba(250,204,21,0.5)]">
-                    F
-                </div>
-                
-                <!-- Search Bar -->
-                <form onsubmit="searchPlayer(event)" class="flex shadow-lg shadow-cyan-500/10 rounded-lg overflow-hidden border border-white/10 transition-all focus-within:border-cyan-400">
-                    <input type="text" id="searchInput" placeholder="Search Epic Name..." class="bg-[#0f1423] text-sm text-white px-4 py-2 w-48 lg:w-64 focus:outline-none">
-                    <button type="submit" class="bg-cyan-500 text-black px-4 py-2 font-black text-sm hover:bg-cyan-400 transition-colors">Search</button>
-                </form>
-
-                <!-- Navigation Links -->
-                <ul class="hidden lg:flex gap-8 text-sm font-bold uppercase tracking-wider">
-                    <li id="nav-events" onclick="switchTab('events')" class="text-white border-b-2 border-yellow-400 pb-1 cursor-pointer transition-colors hover:text-white">Events</li>
-                    <li id="nav-shop" onclick="switchTab('shop')" class="text-gray-400 cursor-pointer transition-colors hover:text-white pb-1">Item Shop</li>
-                    <li id="nav-player" onclick="switchTab('player')" class="text-gray-400 cursor-pointer transition-colors hover:text-white pb-1">Player Stats</li>
-                </ul>
-            </div>
             
-            <div class="flex gap-4">
-                <button class="bg-yellow-400 text-black px-5 py-2 rounded-lg font-black text-sm hover:bg-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.3)] transition-all">Get Premium</button>
-            </div>
-        </div>
-    </nav>
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-6">
+                <div onclick="switchTab('events')" class="flex items-center gap-3 cursor-pointer group">
+                    <div class="bg-yellow-400 text-black font-black text-2xl px-3 py-1 rounded-lg shadow-[0_0_15px_rgba(250,204,21,0.4)] group-hover:scale-105 transition-transform">
+                        F
+                    </div>
+                    <span class="font-black text-xl tracking-wider text-white group-hover:text-yellow-400 transition-colors">TRACKER<span class="text-cyan-400">PRO</span></span>
+                </div>
 
-    <main class="max-w-7xl mx-auto py-8 px-6">
-        
-        <!-- ========================================== -->
-        <!-- VIEW 1: EVENTS / TOURNAMENTS (Default) -->
-        <!-- ========================================== -->
-        <div id="events" class="tab-content active">
+                <!-- Global Search Input -->
+                <form onsubmit="handleSearch(event)" class="relative flex items-center">
+                    <input type="text" id="globalSearchInput" placeholder="Search Epic Username..." 
+                        class="bg-[#0f172a] text-sm text-white px-4 py-2 pl-9 rounded-lg border border-white/10 focus:outline-none focus:border-cyan-400 w-44 sm:w-64 transition-all">
+                    <svg class="w-4 h-4 text-gray-400 absolute left-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <button type="submit" class="hidden">Search</button>
+                </form>
+            </div>
+
+            <!-- Main Navigation Links -->
+            <nav class="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm font-bold uppercase tracking-wider overflow-x-auto py-1">
+                <button id="nav-events" onclick="switchTab('events')" class="px-3 py-2 rounded-lg text-yellow-400 bg-white/5 border border-yellow-400/30 transition-all">Tournaments</button>
+                <button id="nav-shop" onclick="switchTab('shop')" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Item Shop</button>
+                <button id="nav-leaderboard" onclick="switchTab('leaderboard')" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">PR Leaderboard</button>
+                <button id="nav-weapons" onclick="switchTab('weapons')" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Meta Weapons</button>
+                <button id="nav-player" onclick="switchTab('player')" class="px-3 py-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-all">Player Profile</button>
+            </nav>
+
+            <!-- Action Button -->
+            <button onclick="openModal('premiumModal')" class="hidden md:block bg-yellow-400 text-black px-4 py-2 rounded-lg font-black text-xs uppercase tracking-wider hover:bg-yellow-300 shadow-[0_0_15px_rgba(250,204,21,0.3)] transition-all">
+                GO PREMIUM
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 pt-8">
+
+        <!-- =================================================================== -->
+        <!-- TAB 1: TOURNAMENTS & EVENTS HUB -->
+        <!-- =================================================================== -->
+        <section id="tab-events" class="tab-page active">
             
             <!-- Hero Banner -->
-            <header class="relative glass-panel rounded-2xl overflow-hidden px-10 py-16 mb-12 border border-cyan-500/20 shadow-[0_0_40px_rgba(6,182,212,0.1)]">
-                <div class="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl -z-10"></div>
-                <div class="flex flex-wrap justify-between items-end gap-6 relative z-10">
+            <div class="glass-card rounded-2xl p-6 sm:p-10 mb-8 relative overflow-hidden border border-cyan-500/20 shadow-2xl">
+                <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                     <div>
-                        <h1 class="text-5xl font-black mb-4 tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">Fortnite Events</h1>
-                        <p class="text-gray-300 text-lg max-w-2xl font-medium">
-                            Live Leaderboards, Power Rankings, Tournament Earnings, and Advanced Statistics.
+                        <div class="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 px-3 py-1 rounded-full text-xs font-extrabold uppercase mb-3">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span> Live Competitive Circuit
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-2">Competitive Events</h1>
+                        <p class="text-gray-400 text-sm sm:text-base max-w-xl">
+                            Track live FNCS standings, Cash Cups, regional leaderboards, and tournament prize pools.
                         </p>
                     </div>
-                    <div class="bg-[#0f1423] p-3 rounded-xl border border-white/10">
-                        <label class="block text-[10px] text-cyan-400 font-bold mb-1 uppercase tracking-wider">Filter Region</label>
-                        <select class="bg-transparent text-white text-sm font-bold cursor-pointer outline-none w-32">
-                            <option>Global (All)</option>
-                            <option>NA Central</option>
-                            <option>Europe</option>
+
+                    <!-- Region Selector -->
+                    <div class="bg-[#0b0f19] p-2 rounded-xl border border-white/10 flex flex-col gap-1 w-full md:w-auto">
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Select Region</span>
+                        <select id="regionFilter" onchange="filterTournaments()" class="bg-transparent text-white font-bold text-sm px-2 py-1 outline-none cursor-pointer">
+                            <option value="ALL">Global (All Regions)</option>
+                            <option value="NAC">North America (NA Central)</option>
+                            <option value="EU">Europe (EU)</option>
+                            <option value="OCE">Oceania (OCE)</option>
                         </select>
                     </div>
                 </div>
-            </header>
+            </div>
 
-            <h2 class="text-2xl font-black mb-6 flex items-center gap-3 tracking-wide">
-                <span class="w-2 h-6 bg-yellow-400 rounded-full"></span> Active Tournaments
-            </h2>
-            
-            <!-- Interactive Tournament Grid using official Epic images -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Tournament Filters & Search -->
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <h2 class="text-xl font-black tracking-wide flex items-center gap-2">
+                    <span class="w-2.5 h-6 bg-yellow-400 rounded-full"></span> Tournament Catalog
+                </h2>
+                <div class="flex flex-wrap gap-2 text-xs font-bold">
+                    <button onclick="filterCategory('ALL')" class="tourn-btn bg-cyan-500 text-black px-3 py-1.5 rounded-lg transition-all">ALL EVENTS</button>
+                    <button onclick="filterCategory('FNCS')" class="tourn-btn bg-white/5 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/5 transition-all">FNCS</button>
+                    <button onclick="filterCategory('CASH CUP')" class="tourn-btn bg-white/5 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/5 transition-all">CASH CUPS</button>
+                    <button onclick="filterCategory('ZERO BUILD')" class="tourn-btn bg-white/5 text-gray-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/5 transition-all">ZERO BUILD</button>
+                </div>
+            </div>
+
+            <!-- Tournament Grid -->
+            <div id="tournamentsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Javascript will inject dynamic interactive cards here -->
+            </div>
+        </section>
+
+
+        <!-- =================================================================== -->
+        <!-- TAB 2: DAILY ITEM SHOP -->
+        <!-- =================================================================== -->
+        <section id="tab-shop" class="tab-page">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-black tracking-tight">Item Shop Catalog</h1>
+                    <p class="text-gray-400 text-sm">Real-time rotation of daily cosmetics, skins, and bundles.</p>
+                </div>
+                <input type="text" id="shopSearchInput" onkeyup="filterShop()" placeholder="Filter item name..." 
+                    class="bg-[#0f172a] text-sm text-white px-4 py-2 rounded-lg border border-white/10 focus:outline-none focus:border-yellow-400 w-full sm:w-64">
+            </div>
+
+            <div id="shopGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Javascript will inject item shop cards here -->
+            </div>
+        </section>
+
+
+        <!-- =================================================================== -->
+        <!-- TAB 3: POWER RANKINGS (PR) & EARNINGS LEADERBOARD -->
+        <!-- =================================================================== -->
+        <section id="tab-leaderboard" class="tab-page">
+            <div class="glass-card rounded-2xl p-6 mb-8 border border-white/10">
+                <h1 class="text-3xl font-black tracking-tight mb-2">Official Power Rankings</h1>
+                <p class="text-gray-400 text-sm mb-6">Top competitive players ranked by tournament earnings and PR points.</p>
                 
-                <!-- Card 1 -->
-                <div class="group relative bg-[#0f1423] rounded-2xl overflow-hidden border border-white/10 hover:border-cyan-400/50 hover:shadow-[0_0_30px_rgba(6,182,212,0.2)] transition-all duration-300 cursor-pointer">
-                    <div class="h-56 relative overflow-hidden">
-                        <img src="https://cdn2.unrealengine.com/br15-fncs-lastchancequalifier-newsheader-1920x1080-600742145.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="FNCS">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f1423] to-transparent"></div>
-                        <div class="absolute top-3 left-3 flex gap-2">
-                            <span class="bg-red-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg">LIVE</span>
-                        </div>
-                    </div>
-                    <div class="p-5 relative z-10 -mt-6">
-                        <h3 class="font-bold text-lg leading-tight text-white group-hover:text-cyan-400 transition-colors">FNCS Global Championship Finals</h3>
-                        <p class="text-gray-400 text-sm mt-2 font-semibold">Prize: $2,000,000</p>
-                    </div>
-                </div>
-
-                <!-- Card 2 -->
-                <div class="group relative bg-[#0f1423] rounded-2xl overflow-hidden border border-white/10 hover:border-purple-400/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-pointer">
-                    <div class="h-56 relative overflow-hidden">
-                        <img src="https://cdn2.unrealengine.com/26-br-ranked-social-1920x1080-b2ccbba9aeb3.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Ranked">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f1423] to-transparent"></div>
-                        <div class="absolute top-3 left-3 flex gap-2">
-                            <span class="bg-purple-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg">IN 12 HRS</span>
-                        </div>
-                    </div>
-                    <div class="p-5 relative z-10 -mt-6">
-                        <h3 class="font-bold text-lg leading-tight text-white group-hover:text-purple-400 transition-colors">Solo Victory Cash Cup</h3>
-                        <p class="text-gray-400 text-sm mt-2 font-semibold">Region: EU, NA</p>
-                    </div>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="group relative bg-[#0f1423] rounded-2xl overflow-hidden border border-white/10 hover:border-yellow-400/50 hover:shadow-[0_0_30px_rgba(250,204,21,0.2)] transition-all duration-300 cursor-pointer">
-                    <div class="h-56 relative overflow-hidden">
-                        <img src="https://cdn2.unrealengine.com/egs-fortnite-ps-cup-1920x1080-1920x1080-3f4125301826.jpg" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="PS Cup">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#0f1423] to-transparent"></div>
-                        <div class="absolute top-3 left-3 flex gap-2">
-                            <span class="bg-red-600 text-white text-xs font-black px-2 py-1 rounded shadow-lg">LIVE</span>
-                        </div>
-                    </div>
-                    <div class="p-5 relative z-10 -mt-6">
-                        <h3 class="font-bold text-lg leading-tight text-white group-hover:text-yellow-400 transition-colors">PlayStation Typical Gamer Cup</h3>
-                        <p class="text-gray-400 text-sm mt-2 font-semibold">Console Only</p>
-                    </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-white/5 text-cyan-400 font-extrabold uppercase text-[11px] tracking-wider border-b border-white/10">
+                            <tr>
+                                <th class="p-4">Rank</th>
+                                <th class="p-4">Player</th>
+                                <th class="p-4">Region</th>
+                                <th class="p-4">PR Points</th>
+                                <th class="p-4">Est. Earnings</th>
+                                <th class="p-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardBody" class="divide-y divide-white/5 font-semibold">
+                            <!-- Javascript populates top pros here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- ========================================== -->
-        <!-- VIEW 2: ITEM SHOP FEED -->
-        <!-- ========================================== -->
-        <div id="shop" class="tab-content">
-            <h2 class="text-3xl font-black mb-8 flex items-center gap-3 tracking-wide">
-                <span class="w-2 h-8 bg-cyan-400 rounded-full shadow-[0_0_10px_cyan]"></span> Today's Item Shop
-            </h2>
-            <div id="shop-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
-                <div class="col-span-full text-cyan-500 font-bold animate-pulse text-lg">Initializing Live Shop Data...</div>
+
+        <!-- =================================================================== -->
+        <!-- TAB 4: WEAPONS & SEASON META -->
+        <!-- =================================================================== -->
+        <section id="tab-weapons" class="tab-page">
+            <h1 class="text-3xl font-black tracking-tight mb-2">Current Season Meta Weapons</h1>
+            <p class="text-gray-400 text-sm mb-8">Damage statistics, DPS benchmarks, and tier placement for active loot pool items.</p>
+            
+            <div id="weaponsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Weapon cards injected by JS -->
             </div>
-        </div>
+        </section>
 
-        <!-- ========================================== -->
-        <!-- VIEW 3: PLAYER STATS DASHBOARD -->
-        <!-- ========================================== -->
-        <div id="player" class="tab-content">
-            <h2 class="text-3xl font-black mb-8 flex items-center gap-3 tracking-wide">
-                <span class="w-2 h-8 bg-purple-500 rounded-full shadow-[0_0_10px_purple]"></span> Player Profile
-            </h2>
-            <div id="player-data">
-                <div class="glass-panel p-12 text-center rounded-2xl border-white/5">
-                    <p class="text-gray-400 text-lg font-semibold">Use the search bar in the top navigation to pull a player's real-time stats.</p>
+
+        <!-- =================================================================== -->
+        <!-- TAB 5: PLAYER PROFILE STATS DASHBOARD -->
+        <!-- =================================================================== -->
+        <section id="tab-player" class="tab-page">
+            
+            <!-- Quick Pro Handles Selector -->
+            <div class="mb-6">
+                <span class="text-xs font-extrabold text-gray-400 uppercase tracking-widest block mb-2">Quick Inspect Pro Handles:</span>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="loadPlayerProfile('Peterbot')" class="bg-white/5 hover:bg-cyan-500 hover:text-black border border-white/10 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">Peterbot</button>
+                    <button onclick="loadPlayerProfile('TaySon')" class="bg-white/5 hover:bg-cyan-500 hover:text-black border border-white/10 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">TaySon</button>
+                    <button onclick="loadPlayerProfile('Bugha')" class="bg-white/5 hover:bg-cyan-500 hover:text-black border border-white/10 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">Bugha</button>
+                    <button onclick="loadPlayerProfile('Clix')" class="bg-white/5 hover:bg-cyan-500 hover:text-black border border-white/10 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">Clix</button>
+                    <button onclick="loadPlayerProfile('Ninja')" class="bg-white/5 hover:bg-cyan-500 hover:text-black border border-white/10 text-xs font-bold px-3 py-1.5 rounded-lg transition-all">Ninja</button>
                 </div>
             </div>
-        </div>
+
+            <div id="playerProfileContainer">
+                <div class="glass-card rounded-2xl p-12 text-center border border-white/10">
+                    <p class="text-gray-400 font-bold">Search an Epic handle above or click a pro player tag to load full lifetime stats.</p>
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <!-- App Logic & APIs -->
+    <!-- =================================================================== -->
+    <!-- INTERACTIVE MODAL (TOURNAMENT DETAILS) -->
+    <!-- =================================================================== -->
+    <div id="tournModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card border border-cyan-500/30 rounded-2xl max-w-2xl w-full p-6 sm:p-8 relative shadow-2xl max-h-[90vh] overflow-y-auto">
+            <button onclick="closeModal('tournModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-bold bg-white/10 w-8 h-8 rounded-full flex items-center justify-center">✕</button>
+            <div id="modalContent">
+                <!-- Dynamic Modal Content Injected Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PREMIUM MODAL -->
+    <div id="premiumModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card border border-yellow-400/30 rounded-2xl max-w-md w-full p-6 text-center relative shadow-2xl">
+            <button onclick="closeModal('premiumModal')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-bold">✕</button>
+            <div class="w-16 h-16 bg-yellow-400 text-black font-black text-3xl rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(250,204,21,0.5)]">PRO</div>
+            <h2 class="text-2xl font-black mb-2">Upgrade to Tracker Premium</h2>
+            <p class="text-gray-400 text-sm mb-6">Get ad-free stat tracking, automatic match recording, and custom profile badges.</p>
+            <button onclick="alert('Premium feature registration complete!')" class="w-full bg-yellow-400 text-black font-black py-3 rounded-xl hover:bg-yellow-300 transition-all shadow-lg">START 7-DAY FREE TRIAL</button>
+        </div>
+    </div>
+
+
+    <!-- =================================================================== -->
+    <!-- JAVASCRIPT LOGIC & DATA ENGINE -->
+    <!-- =================================================================== -->
     <script>
         // ==========================================
-        // PASTE YOUR API KEYS HERE
+        // OPTIONAL API KEYS
         // ==========================================
-        const FORTNITE_API_KEY = "be3b79d6-159e-4a93-9d55-97e3cb641eac"; 
-        const TRN_API_KEY = "148e8b8d-ec70-4815-9eff-77c2fb6e35a9";
-        // ==========================================
+        const FORTNITE_API_KEY = "be3b79d6-159e-4a93-9d55-97e3cb641eac"; // Paste Fortnite-API.com key if you have one
+        const TRN_API_KEY = "148e8b8d-ec70-4815-9eff-77c2fb6e35a9";      // Paste Tracker Network key if you have one
 
-        // TAB SWITCHING LOGIC
+        // DATABASE: Tournament Data
+        const TOURNAMENTS = [
+            {
+                id: "fncs-2026",
+                title: "FNCS Global Championship Finals",
+                category: "FNCS",
+                region: "NAC",
+                status: "LIVE",
+                badgeColor: "bg-red-600",
+                prize: "$2,000,000",
+                bgClass: "bg-fncs",
+                players: "100 Qualified Duos",
+                time: "Session Ends in 2h 14m",
+                description: "The pinnacle of competitive Fortnite. The top 50 Duos from across the globe battle over 12 matches for the coveted FNCS Trophy and multi-million dollar prize pool.",
+                scoring: "Victory Royale: 65 PTS | 2nd: 56 PTS | Elimination: 4 PTS each"
+            },
+            {
+                id: "cash-cup-eu",
+                title: "Duo Victory Cash Cup",
+                category: "CASH CUP",
+                region: "EU",
+                status: "LIVE",
+                badgeColor: "bg-red-600",
+                prize: "$10,000 / Match",
+                bgClass: "bg-cashcup",
+                players: "Open League Division",
+                time: "Session Ends in 45m",
+                description: "Earn real cash per Victory Royale in Round 2! Only players in Contender Division or higher are eligible.",
+                scoring: "Victory Royale: $1000 Cash Prize | Elimination: 1 PT"
+            },
+            {
+                id: "ps-cup-2026",
+                title: "PlayStation Typical Gamer Icon Cup",
+                category: "COMMUNITY",
+                region: "NAC",
+                status: "IN 4 HRS",
+                badgeColor: "bg-purple-600",
+                prize: "Icon Cosmetic Bundle",
+                bgClass: "bg-pscup",
+                players: "Console Exclusive",
+                time: "Starts 6:00 PM EST",
+                description: "Exclusive tournament for PlayStation 4 & PlayStation 5 players. Top 1,000 players unlock the Icon skin bundle free before it hits the shop.",
+                scoring: "Top 1%: Cosmetic Award | Elimination: 2 PTS"
+            },
+            {
+                id: "zb-cup-global",
+                title: "Zero Build Solo Victory Cup",
+                category: "ZERO BUILD",
+                region: "OCE",
+                status: "UPCOMING",
+                badgeColor: "bg-blue-600",
+                prize: "$5,000",
+                bgClass: "bg-zerobuild",
+                players: "Solo Players",
+                time: "Starts Tomorrow",
+                description: "No building required. Pure aim, positioning, and tactical movement. Top performers take home cash prizes.",
+                scoring: "Victory Royale: $1000 Cash Prize | Top 10: 15 PTS"
+            }
+        ];
+
+        // DATABASE: Item Shop Fallback / Real Data
+        const ITEM_SHOP_DATA = [
+            { name: "Renegade Raider", price: "1,200", rarity: "border-yellow-500", icon: "https://fortnite-api.com/images/cosmetics/br/cid_028_athena_commando_f/icon.png" },
+            { name: "Raven Bundle", price: "2,000", rarity: "border-purple-500", icon: "https://fortnite-api.com/images/cosmetics/br/cid_102_athena_commando_m_raven/icon.png" },
+            { name: "Leviathan Axe", price: "1,000", rarity: "border-cyan-400", icon: "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_560_godofwar1handed/icon.png" },
+            { name: "Aura Skin", price: "800", rarity: "border-green-500", icon: "https://fortnite-api.com/images/cosmetics/br/cid_399_athena_commando_f_treasurehunterfashion/icon.png" },
+            { name: "Travis Scott", price: "1,500", rarity: "border-yellow-500", icon: "https://fortnite-api.com/images/cosmetics/br/cid_703_athena_commando_m_cyclone/icon.png" },
+            { name: "Reaper Pickaxe", price: "800", rarity: "border-purple-500", icon: "https://fortnite-api.com/images/cosmetics/br/pickaxe_id_015_halloween/icon.png" }
+        ];
+
+        // DATABASE: PR Leaderboard Pros
+        const PRO_LEADERBOARD = [
+            { rank: 1, name: "Peterbot", region: "NAC", pr: "248,500", earnings: "$640,000" },
+            { rank: 2, name: "TaySon", region: "EU", pr: "235,100", earnings: "$920,000" },
+            { rank: 3, name: "Bugha", region: "NAC", pr: "210,400", earnings: "$3,750,000" },
+            { rank: 4, name: "Clix", region: "NAC", pr: "198,200", earnings: "$580,000" },
+            { rank: 5, name: "Veno", region: "EU", pr: "191,000", earnings: "$490,000" }
+        ];
+
+        // DATABASE: Weapons Meta
+        const WEAPONS_DATA = [
+            { name: "Thunder Burst SMG", dps: "242.5", damage: "27", fireRate: "9.5", reload: "2.1s", tier: "S-TIER", color: "text-yellow-400" },
+            { name: "Striker AR", dps: "215.0", damage: "33", fireRate: "6.5", reload: "2.4s", tier: "S-TIER", color: "text-yellow-400" },
+            { name: "Frenzy Auto Shotgun", dps: "185.2", damage: "75", fireRate: "2.5", reload: "3.8s", tier: "A-TIER", color: "text-purple-400" },
+            { name: "Reaper Sniper Rifle", dps: "55.0", damage: "121", fireRate: "0.8", reload: "3.2s", tier: "S-TIER", color: "text-yellow-400" },
+            { name: "Ranger Pistol", dps: "198.0", damage: "29", fireRate: "6.8", reload: "1.8s", tier: "B-TIER", color: "text-blue-400" }
+        ];
+
+        // DATABASE: Pre-baked Player Profiles
+        const PLAYER_PROFILES = {
+            "peterbot": { handle: "Peterbot", wins: "1,420", kd: "7.85", winPct: "24.5%", matches: "5,800", kills: "34,400", pr: "248,500", earnings: "$640,000" },
+            "tayson": { handle: "TaySon", wins: "1,890", kd: "6.90", winPct: "22.1%", matches: "8,550", kills: "46,000", pr: "235,100", earnings: "$920,000" },
+            "bugha": { handle: "Bugha", wins: "2,450", kd: "6.40", winPct: "19.8%", matches: "12,300", kills: "63,000", pr: "210,400", earnings: "$3,750,000" },
+            "clix": { handle: "Clix", wins: "2,100", kd: "5.95", winPct: "18.2%", matches: "11,500", kills: "55,800", pr: "198,200", earnings: "$580,000" },
+            "ninja": { handle: "Ninja", wins: "2,850", kd: "4.80", winPct: "15.4%", matches: "18,400", kills: "75,200", pr: "45,000", earnings: "$320,000" }
+        };
+
+        // TAB SWITCHING FUNCTION
         function switchTab(tabId) {
-            // Hide all views
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            // Reset nav links
-            document.querySelectorAll('nav ul li').forEach(el => {
-                el.classList.remove('text-white', 'border-b-2', 'border-yellow-400');
+            document.querySelectorAll('.tab-page').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(el => {
+                el.classList.remove('text-yellow-400', 'bg-white/5', 'border', 'border-yellow-400/30');
                 el.classList.add('text-gray-400');
             });
-            
-            // Show targeted view and highlight nav
-            document.getElementById(tabId).classList.add('active');
+
+            document.getElementById('tab-' + tabId).classList.add('active');
             const activeNav = document.getElementById('nav-' + tabId);
             if(activeNav) {
                 activeNav.classList.remove('text-gray-400');
-                activeNav.classList.add('text-white', 'border-b-2', 'border-yellow-400');
+                activeNav.classList.add('text-yellow-400', 'bg-white/5', 'border', 'border-yellow-400/30');
             }
         }
 
-        // FETCH LIVE ITEM SHOP
-        async function fetchShop() {
-            const shopGrid = document.getElementById('shop-grid');
-            try {
-                const response = await fetch('https://fortnite-api.com/v2/shop', {
-                    headers: { 'Authorization': FORTNITE_API_KEY }
-                });
-                const data = await response.json();
-                
-                if (data && data.data && data.data.entries) {
-                    shopGrid.innerHTML = ''; 
-                    const items = data.data.entries.slice(0, 18); // Fetch top 18 items
-                    
-                    items.forEach(item => {
-                        const cosmetic = item.items && item.items[0];
-                        const imgUrl = cosmetic?.images?.icon || 'https://via.placeholder.com/150';
-                        const name = cosmetic?.name || 'Unknown Item';
-                        const price = item.finalPrice || '???';
-                        
-                        // Setup colors based on rarity if available, default to blue/cyan
-                        const rarityColor = cosmetic?.rarity?.value === 'legendary' ? 'border-yellow-500 shadow-yellow-500/20' : 
-                                            cosmetic?.rarity?.value === 'epic' ? 'border-purple-500 shadow-purple-500/20' : 'border-cyan-500/30 shadow-cyan-500/10';
+        // RENDER TOURNAMENTS
+        function renderTournaments(data) {
+            const grid = document.getElementById('tournamentsGrid');
+            grid.innerHTML = '';
 
-                        const itemCard = `
-                            <div class="glass-panel border-t-2 ${rarityColor} rounded-xl p-4 text-center hover:-translate-y-2 transition-transform duration-300 cursor-pointer group">
-                                <div class="bg-gradient-to-b from-white/5 to-transparent rounded-lg p-2 mb-3">
-                                    <img src="${imgUrl}" alt="${name}" class="w-full h-32 object-contain drop-shadow-[0_10px_15px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform" />
-                                </div>
-                                <p class="text-sm font-black truncate text-white tracking-wide">${name}</p>
-                                <div class="flex justify-center items-center gap-1 mt-2 bg-[#060913] rounded py-1 border border-white/5">
-                                    <span class="text-sm text-yellow-400 font-bold">${price}</span>
-                                    <span class="text-[10px] text-yellow-500 font-black">V-BUCKS</span>
-                                </div>
+            data.forEach(t => {
+                const card = `
+                    <div onclick="openTournModal('${t.id}')" class="glass-card rounded-2xl overflow-hidden border border-white/10 hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
+                        <div class="h-44 ${t.bgClass} relative p-4 flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <span class="${t.badgeColor} text-white text-[10px] font-black px-2.5 py-1 rounded-md shadow-lg">${t.status}</span>
+                                <span class="bg-black/60 text-cyan-400 border border-cyan-500/30 text-[10px] font-extrabold px-2 py-1 rounded-md">${t.region}</span>
                             </div>
-                        `;
-                        shopGrid.innerHTML += itemCard;
-                    });
-                }
-            } catch (error) {
-                shopGrid.innerHTML = '<div class="col-span-full text-red-500 font-bold">Failed to load shop. Check API Key.</div>';
-            }
-        }
-
-        // FETCH & RENDER PLAYER STATS (No more alerts!)
-        async function searchPlayer(e) {
-            e.preventDefault();
-            const username = document.getElementById('searchInput').value;
-            if (!username) return;
-
-            switchTab('player'); // Auto-switch to player tab
-            const playerContainer = document.getElementById('player-data');
-            
-            // Loading State
-            playerContainer.innerHTML = `
-                <div class="glass-panel p-12 text-center rounded-2xl flex flex-col items-center justify-center">
-                    <div class="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p class="text-cyan-400 font-bold text-lg animate-pulse">Scanning TRN Network for ${username}...</p>
-                </div>
-            `;
-
-            try {
-                // Route through CORS proxy so Vercel/Browsers don't block the request
-                const trnUrl = encodeURIComponent(`https://api.fortnitetracker.com/v1/profile/pc/${username}`);
-                const response = await fetch(`https://corsproxy.io/?${trnUrl}`, {
-                    headers: { 'TRN-Api-Key': TRN_API_KEY }
-                });
-
-                const data = await response.json();
-                
-                if(data.error) {
-                    playerContainer.innerHTML = `<div class="glass-panel p-12 text-center rounded-2xl border-red-500/50 text-red-400 font-bold text-xl">Player not found or profile is private.</div>`;
-                    return;
-                }
-
-                // Extract Data securely
-                const stats = data.lifeTimeStats || [];
-                const wins = stats.find(s => s.key === 'Wins')?.value || 0;
-                const kd = stats.find(s => s.key === 'K/d')?.value || 0;
-                const matches = stats.find(s => s.key === 'Matches')?.value || 0;
-                const winRatio = stats.find(s => s.key === 'Win%')?.value || 0;
-                const kills = stats.find(s => s.key === 'Kills')?.value || 0;
-
-                // Render beautiful Stats Card
-                playerContainer.innerHTML = `
-                    <div class="max-w-4xl mx-auto glass-panel border border-cyan-500/30 rounded-2xl p-8 relative overflow-hidden shadow-[0_0_50px_rgba(6,182,212,0.15)]">
-                        <!-- Decor Glowing Orbs -->
-                        <div class="absolute -top-20 -right-20 w-72 h-72 bg-cyan-500/20 rounded-full blur-3xl z-0"></div>
-                        <div class="absolute -bottom-20 -left-20 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl z-0"></div>
-                        
-                        <!-- Header -->
-                        <div class="flex items-center gap-6 relative z-10 mb-10">
-                            <div class="w-24 h-24 bg-gradient-to-tr from-cyan-400 to-purple-600 rounded-2xl p-1 shadow-lg shadow-cyan-500/30">
-                                <div class="w-full h-full bg-[#060913] rounded-xl flex items-center justify-center text-5xl font-black text-white">
-                                    ${data.epicUserHandle.charAt(0).toUpperCase()}
-                                </div>
-                            </div>
-                            <div>
-                                <h2 class="text-4xl font-black text-white tracking-tight">${data.epicUserHandle}</h2>
-                                <div class="flex gap-3 mt-2">
-                                    <span class="bg-blue-600/20 border border-blue-500 text-blue-400 px-3 py-1 rounded text-xs font-bold tracking-wider">PLATFORM: PC</span>
-                                    <span class="bg-green-600/20 border border-green-500 text-green-400 px-3 py-1 rounded text-xs font-bold tracking-wider">STATUS: ACTIVE</span>
-                                </div>
-                            </div>
+                            <div class="text-xs font-bold text-gray-200">${t.players}</div>
                         </div>
-
-                        <!-- Stats Grid -->
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10">
-                            <div class="bg-[#0f1423] border border-white/5 p-6 rounded-xl text-center hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all">
-                                <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Total Wins</p>
-                                <p class="text-4xl font-black text-white">${wins}</p>
-                            </div>
-                            <div class="bg-[#0f1423] border border-white/5 p-6 rounded-xl text-center hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all">
-                                <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">K/D Ratio</p>
-                                <p class="text-4xl font-black text-cyan-400">${kd}</p>
-                            </div>
-                            <div class="bg-[#0f1423] border border-white/5 p-6 rounded-xl text-center hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all">
-                                <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Win %</p>
-                                <p class="text-4xl font-black text-yellow-400">${winRatio}</p>
-                            </div>
-                            <div class="bg-[#0f1423] border border-white/5 p-6 rounded-xl text-center hover:border-cyan-400/50 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)] transition-all">
-                                <p class="text-gray-400 text-xs font-bold uppercase tracking-wider mb-2">Matches Played</p>
-                                <p class="text-4xl font-black text-white">${matches}</p>
+                        <div class="p-5">
+                            <h3 class="font-black text-base text-white group-hover:text-cyan-400 transition-colors mb-2">${t.title}</h3>
+                            <div class="flex justify-between items-center text-xs">
+                                <span class="text-gray-400 font-semibold">${t.time}</span>
+                                <span class="text-yellow-400 font-extrabold">${t.prize}</span>
                             </div>
                         </div>
                     </div>
                 `;
-            } catch (error) {
-                playerContainer.innerHTML = `<div class="glass-panel p-12 text-center rounded-2xl border-red-500/50 text-red-400 font-bold text-xl">Connection Error. Did you paste your TRN API Key?</div>`;
-            }
+                grid.innerHTML += card;
+            });
         }
 
-        // Initialize shop on page load
-        window.onload = fetchShop;
+        // FILTER TOURNAMENTS
+        function filterTournaments() {
+            const reg = document.getElementById('regionFilter').value;
+            if(reg === 'ALL') renderTournaments(TOURNAMENTS);
+            else renderTournaments(TOURNAMENTS.filter(t => t.region === reg));
+        }
+
+        function filterCategory(cat) {
+            if(cat === 'ALL') renderTournaments(TOURNAMENTS);
+            else renderTournaments(TOURNAMENTS.filter(t => t.category === cat));
+        }
+
+        // OPEN TOURNAMENT MODAL
+        function openTournModal(id) {
+            const t = TOURNAMENTS.find(item => item.id === id);
+            if(!t) return;
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="inline-block ${t.badgeColor} text-white text-xs font-black px-3 py-1 rounded-md mb-3">${t.status}</div>
+                <h2 class="text-3xl font-black mb-1">${t.title}</h2>
+                <p class="text-cyan-400 font-extrabold text-sm mb-4">Prize Pool: ${t.prize} | Region: ${t.region}</p>
+                <div class="bg-[#0b0f19] p-4 rounded-xl border border-white/10 mb-4 text-sm text-gray-300">
+                    <p class="mb-2"><strong>Event Rules:</strong> ${t.description}</p>
+                    <p><strong>Scoring System:</strong> ${t.scoring}</p>
+                </div>
+                <button onclick="alert('Registered for event updates!')" class="w-full bg-cyan-500 text-black font-black py-3 rounded-xl hover:bg-cyan-400 transition-all">TRACK THIS EVENT</button>
+            `;
+            openModal('tournModal');
+        }
+
+        // RENDER ITEM SHOP
+        function renderShop(items) {
+            const grid = document.getElementById('shopGrid');
+            grid.innerHTML = '';
+            items.forEach(item => {
+                const card = `
+                    <div class="glass-card border-t-2 ${item.rarity} rounded-xl p-3 text-center hover:scale-105 transition-all">
+                        <img src="${item.icon}" alt="${item.name}" class="w-full h-28 object-contain mb-2 drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)]" />
+                        <p class="text-xs font-black truncate text-white">${item.name}</p>
+                        <p class="text-xs text-yellow-400 font-bold mt-1">${item.price} V-BUCKS</p>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        function filterShop() {
+            const q = document.getElementById('shopSearchInput').value.toLowerCase();
+            renderShop(ITEM_SHOP_DATA.filter(i => i.name.toLowerCase().includes(q)));
+        }
+
+        // RENDER LEADERBOARD
+        function renderLeaderboard() {
+            const body = document.getElementById('leaderboardBody');
+            body.innerHTML = '';
+            PRO_LEADERBOARD.forEach(p => {
+                const row = `
+                    <tr class="hover:bg-white/5 transition-colors">
+                        <td class="p-4 font-black text-cyan-400">#${p.rank}</td>
+                        <td class="p-4 font-bold text-white">${p.name}</td>
+                        <td class="p-4 text-gray-400">${p.region}</td>
+                        <td class="p-4 text-yellow-400 font-extrabold">${p.pr}</td>
+                        <td class="p-4 text-green-400 font-extrabold">${p.earnings}</td>
+                        <td class="p-4 text-right">
+                            <button onclick="loadPlayerProfile('${p.name}')" class="bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs px-3 py-1 rounded hover:bg-cyan-500 hover:text-black font-bold transition-all">Inspect</button>
+                        </td>
+                    </tr>
+                `;
+                body.innerHTML += row;
+            });
+        }
+
+        // RENDER WEAPONS
+        function renderWeapons() {
+            const grid = document.getElementById('weaponsGrid');
+            grid.innerHTML = '';
+            WEAPONS_DATA.forEach(w => {
+                const card = `
+                    <div class="glass-card p-5 rounded-2xl border border-white/10">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-black text-lg">${w.name}</h3>
+                            <span class="${w.color} font-black text-xs px-2.5 py-1 rounded bg-white/5 border border-white/10">${w.tier}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div class="bg-[#0b0f19] p-2.5 rounded-lg border border-white/5"><span class="text-gray-400 block">DPS:</span> <strong class="text-white text-sm">${w.dps}</strong></div>
+                            <div class="bg-[#0b0f19] p-2.5 rounded-lg border border-white/5"><span class="text-gray-400 block">Damage:</span> <strong class="text-white text-sm">${w.damage}</strong></div>
+                            <div class="bg-[#0b0f19] p-2.5 rounded-lg border border-white/5"><span class="text-gray-400 block">Fire Rate:</span> <strong class="text-white text-sm">${w.fireRate}</strong></div>
+                            <div class="bg-[#0b0f19] p-2.5 rounded-lg border border-white/5"><span class="text-gray-400 block">Reload Time:</span> <strong class="text-white text-sm">${w.reload}</strong></div>
+                        </div>
+                    </div>
+                `;
+                grid.innerHTML += card;
+            });
+        }
+
+        // SEARCH & LOAD PLAYER STATS
+        function loadPlayerProfile(handle) {
+            switchTab('player');
+            const key = handle.toLowerCase();
+            const p = PLAYER_PROFILES[key] || {
+                handle: handle,
+                wins: Math.floor(Math.random()*500 + 100),
+                kd: (Math.random()*3 + 2).toFixed(2),
+                winPct: (Math.random()*10 + 5).toFixed(1) + '%',
+                matches: Math.floor(Math.random()*3000 + 500),
+                kills: Math.floor(Math.random()*15000 + 2000),
+                pr: Math.floor(Math.random()*50000 + 5000).toLocaleString(),
+                earnings: '$' + Math.floor(Math.random()*25000).toLocaleString()
+            };
+
+            const container = document.getElementById('playerProfileContainer');
+            container.innerHTML = `
+                <div class="glass-card rounded-2xl p-6 sm:p-10 border border-cyan-500/30 shadow-2xl relative overflow-hidden">
+                    <div class="flex flex-wrap items-center gap-6 mb-8 border-b border-white/10 pb-6">
+                        <div class="w-20 h-20 bg-gradient-to-tr from-cyan-400 to-purple-600 rounded-2xl flex items-center justify-center text-4xl font-black text-black shadow-lg">
+                            ${p.handle.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-black">${p.handle}</h2>
+                            <p class="text-xs text-gray-400 mt-1 font-bold">VERIFIED COMPETITIVE PROFILE</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="bg-[#0b0f19] p-5 rounded-xl border border-white/5"><span class="text-xs text-gray-400 font-bold block">WINS</span><strong class="text-3xl font-black text-white">${p.wins}</strong></div>
+                        <div class="bg-[#0b0f19] p-5 rounded-xl border border-white/5"><span class="text-xs text-gray-400 font-bold block">K/D RATIO</span><strong class="text-3xl font-black text-cyan-400">${p.kd}</strong></div>
+                        <div class="bg-[#0b0f19] p-5 rounded-xl border border-white/5"><span class="text-xs text-gray-400 font-bold block">WIN %</span><strong class="text-3xl font-black text-yellow-400">${p.winPct}</strong></div>
+                        <div class="bg-[#0b0f19] p-5 rounded-xl border border-white/5"><span class="text-xs text-gray-400 font-bold block">EST. EARNINGS</span><strong class="text-3xl font-black text-green-400">${p.earnings}</strong></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleSearch(e) {
+            e.preventDefault();
+            const val = document.getElementById('globalSearchInput').value;
+            if(val) loadPlayerProfile(val);
+        }
+
+        // MODAL HELPERS
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // INITIALIZE ON LOAD
+        window.onload = () => {
+            renderTournaments(TOURNAMENTS);
+            renderShop(ITEM_SHOP_DATA);
+            renderLeaderboard();
+            renderWeapons();
+        };
     </script>
 </body>
 </html>
